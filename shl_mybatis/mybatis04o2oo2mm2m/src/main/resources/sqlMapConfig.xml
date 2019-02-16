@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--导数据源的配置文件-->
+    <properties resource="jdbc.properties"/>
+    <!--给所有的实体类添加别名-->
+    <typeAliases>
+        <package name="com.shl.entity"/>
+    </typeAliases>
+
+    <!--添加数据源-->
+    <environments default="mysql">
+        <environment id="mysql">
+            <transactionManager type="jdbc"></transactionManager>
+            <dataSource type="pooled">
+                <property name="driver" value="${jdbc.driver}"></property>
+                <property name="url" value="${jdbc.url}"></property>
+                <property name="username" value="${jdbc.username}"></property>
+                <property name="password" value="${jdbc.password}"></property>
+            </dataSource>
+        </environment>
+    </environments>
+    <!--扫描指定该包下配置文件-->
+    <mappers>
+        <package name="com.shl.dao"></package>
+    </mappers>
+
+</configuration>

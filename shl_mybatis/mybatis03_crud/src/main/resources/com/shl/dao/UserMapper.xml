@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shl.dao.UserMapper">
+    <!--指定常用的sql查询代码块-->
+    <sql id="selectUser">
+        select * from user
+    </sql>
+
+
+    <!--指定对应封装 但是一般是对应列名,还有另外注解的方式是最常用-->
+    <resultMap id="resultMap" type="User">
+        <result column="name" property="username"></result>
+        <result column="day" property="birthday"></result>
+        <result column="gender" property="sex"></result>
+    </resultMap>
+
+
+    <select id="findAll" resultType="com.shl.entity.User">
+        SELECT  * from USER
+    </select>
+
+    <!--动态更新多个属性-->
+    <update id="updateById">
+        update user
+        <set>
+            <if test="user !=null and user.username !=null">
+                username=#{user.username},
+            </if>
+            <if test="user!=null and user.sex !=null">
+                sex=#{user.sex},
+            </if>
+            <if test="user!=null and user.birthday !=null">
+                birthday=#{user.birthday},
+            </if>
+            <if test="user!=null and user.address !=null">
+                address=#{user.address},
+            </if>
+        </set>
+
+        <where>
+            <if test="ids!=null and ids.length>0">
+                <foreach collection="ids" open=" id in(" separator="," close=")" item="id">
+                    #{id}
+                </foreach>
+            </if>
+
+        </where>
+    </update>
+
+    <insert id="saveUser" parameterType="User">
+        insert into user(username,birthday,sex,address) VALUE(#{username},#{birthday},#{sex},#{address});
+    </insert>
+
+    <delete id="deleteUser">
+        delete from user where id =#{id}
+    </delete>
+
+    <!--根据时间间隔查询-->
+    <select id="findByCondition" resultType="User">
+        <!--直接使用&lt;代替-->
+        <!--<![CDATA[select * from user where username =#{user.username} and birthday>=#{starDate} and birthday<=#{endDate}]]>-->
+
+        /*动态条件查询*/
+        <include refid="selectUser"></include>
+        <where>
+            <if test="user!=null and user.username !=''">
+                and username =#{user.username}
+            </if>
+            <if test="starDate !=null">
+                and birthday>=#{starDate}
+            </if>
+            <if test="endDate !=null">
+                and birthday&lt;=#{endDate}
+            </if>
+        </where>
+
+    </select>
+
+    <!--防止sql注入的方法:模糊查询-->
+    <select id="findByUsernameLike" resultType="User">
+        SELECT * from user where username like #{username}
+    </select>
+
+    <select id="findByUsernameLikeNotSecurity" resultType="User">
+        SELECT  * from USER  where username like '%${value}%'
+    </select>
+
+    <select id="findAllToMap" resultMap="resultMap">
+        select username name, birthday day,sex gender,address from user
+    </select>
+
+    <!--selectKey-->
+    <insert id="findReturnId" parameterType="User">
+        <selectKey keyColumn="id" keyProperty="id" resultType="int" order="AFTER">
+            SELECT LAST_INSERT_Id()
+        </selectKey>
+        insert into user(username,birthday,sex,address) VALUE(#{username},#{birthday},#{sex},#{address});
+    </insert>
+</mapper>

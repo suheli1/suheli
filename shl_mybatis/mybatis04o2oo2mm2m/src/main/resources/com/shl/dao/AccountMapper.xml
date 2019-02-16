@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shl.dao.AccountMapper">
+    <!--账户和用户是一对一的关系-->
+    <resultMap id="accountFindAll" type="account">
+        <id property="accountId" column="accountId"></id>
+        <result property="money" column="money"></result>
+        <result property="uid" column="uid"></result>
+        <association property="user" javaType="user" column="uid">
+            <id property="id" column="id"></id>
+            <result property="username" column="username"></result>
+            <result property="birthday" column="birthday"></result>
+            <result property="sex" column="sex"></result>
+            <result property="address" column="address"></result>
+        </association>
+    </resultMap>
+
+    <select id="findAllAccount" resultMap="accountFindAll">
+        select * from account a INNER  join  USER u on a.uid = u.id
+    </select>
+
+
+</mapper>
