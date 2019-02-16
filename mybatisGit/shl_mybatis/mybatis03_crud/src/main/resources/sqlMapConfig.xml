@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--引入数据源文件-->
+    <properties resource="jdbc.properties"></properties>
+    <!--别名 指定这个包下面的所有的实体类都以类名作为类路径,实现可以拼接-->
+    <typeAliases >
+        <package name="com.shl.entity"></package>
+    </typeAliases>
+
+    <environments default="mysql">
+        <environment id="mysql">
+            <transactionManager type="jdbc"></transactionManager>
+            <dataSource type="pooled">
+                <property name="url" value="${jdbc.url}"></property>
+                <property name="driver" value="${jdbc.driver}"></property>
+                <property name="username" value="${jdbc.username}"></property>
+                <property name="password" value="${jdbc.password}"></property>
+            </dataSource>
+        </environment>
+    </environments>
+    <!--引入映射文件-->
+    <mappers>
+        <!--使用package标签把com.shl.dao下的包扫描如程序,注意的是,映射文件跟接口的名字是要相同,对应的包也要是对应?-->
+        <package name="com.shl.dao"></package>
+    </mappers>
+</configuration>
